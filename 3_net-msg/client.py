@@ -16,6 +16,7 @@ import uuid
 import zmq
 from zmq.utils.win32 import allow_interrupt
 from utils import count_calls
+import click
 
 # pylint:disable=inconsistent-quotes
 ClientProp = namedtuple('ClientProp',
@@ -87,7 +88,9 @@ def run_client(client_prop:ClientProp, text:str):
     txt_req_rep:str = client_prop.socket_txt.recv_string()
     print(f" Received reply to: {txt_req} << \"{txt_req_rep}\"")
 
-def main():
+@click.command()
+@click.option("--text", "-t", default="Hello, Server!", help="The text to send to the server.")
+def main(text:str):
     client_prop:ClientProp
     def keyb_int():
         # See "Ctrl-C doesn't kill python on windows"
@@ -97,7 +100,7 @@ def main():
     try:
         with allow_interrupt(keyb_int):
             client_prop = start_client()
-            run_client(client_prop, "Hello, Server!")
+            run_client(client_prop, text)
     except KeyboardInterrupt:
         print("Interrupt received, stopping...")
     finally:
@@ -105,4 +108,4 @@ def main():
         stop_client(client_prop)
 
 if __name__ == '__main__':  # pylint:disable=inconsistent-quotes
-    main()
+    main()  # pylint:disable=no-value-for-parameter

@@ -34,6 +34,12 @@ Launching the client (for example, in another terminal window):
 poetry run python client.py
 ```
 
+By default, the text sent to the server is "Hello, Server!", but you can provide your own:
+
+```
+poetry run python client.py --text "Hello, Dear Server!"
+```
+
 Both server and client can be gracefully interrupted using Ctrl+C.
 
 Another way is to use the management client (which currently uses the registration socket):
