@@ -92,7 +92,8 @@ def stop_server(server_prop:ServerProp):
         print("Stopping server: server already stopped.")
 
 def run_server(server_prop:ServerProp, text_file:str):
-    msg_log = open(text_file, 'a', encoding='utf-8')  # pylint:disable=inconsistent-quotes
+    # Open text log file, line-buffered:
+    txt_log_file = open(text_file, 'a', encoding='utf-8', buffering=1)  # pylint:disable=inconsistent-quotes
     client:Dict[uuid.UUID,str] = {}
     # Process messages from both sockets:
     while True:
@@ -132,7 +133,7 @@ def run_server(server_prop:ServerProp, text_file:str):
                 else:
                     print(" All good :)")
                     print(f" Storing \"{client_txt}\" for later use.")
-                    msg_log.write(client_txt + "\n")
+                    txt_log_file.write(client_txt + "\n")
                     txt_req_rep = "ACK"
             print(f" Sending reply to: \"{txt_req}\" >> \"{txt_req_rep}\"")
             server_prop.socket_txt.send_string(txt_req_rep)
