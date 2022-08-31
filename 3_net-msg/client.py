@@ -75,7 +75,7 @@ def run_client(client_prop:ClientProp, text:str):
     print(f"Sending registration request: \"{reg_req}\"...")
     client_prop.socket_reg.send_string(reg_req)
     # Get the reply to the registration request:
-    reg_req_rep = client_prop.socket_reg.recv_string()
+    reg_req_rep:str = client_prop.socket_reg.recv_string()
     print(f" Received reply to: \"{reg_req}\" << \"{reg_req_rep}\"")
     # Send the request with the text:
     token:str = reg_req_rep
@@ -84,7 +84,7 @@ def run_client(client_prop:ClientProp, text:str):
     print(f"Sending request with text: {txt_req}...")
     client_prop.socket_txt.send_multipart(txt_req)
     # Get the reply to the request with the text:
-    txt_req_rep = client_prop.socket_txt.recv_string()
+    txt_req_rep:str = client_prop.socket_txt.recv_string()
     print(f" Received reply to: {txt_req} << \"{txt_req_rep}\"")
 
 def main():

@@ -56,7 +56,7 @@ def run_client(client_prop:ClientProp):
     print(f"Sending stop request: \"{stop_req}\"...")
     client_prop.socket_reg.send_string(stop_req)
     # Get the reply to the stop request:
-    stop_req_rep = client_prop.socket_reg.recv_string()
+    stop_req_rep:str = client_prop.socket_reg.recv_string()
     print(f" Received reply to: \"{stop_req}\" << \"{stop_req_rep}\"")
 
 def main():

@@ -10,7 +10,7 @@
 #      replies with ACK if client recognized and registered, errors if not.
 #
 
-from typing import Tuple
+from typing import Tuple, Dict
 from collections import namedtuple
 import uuid
 import zmq
@@ -92,7 +92,7 @@ def stop_server(server_prop:ServerProp):
 
 def run_server(server_prop:ServerProp, text_file:str):
     msg_log = open(text_file, 'a', encoding='utf-8')  # pylint:disable=inconsistent-quotes
-    client = {}
+    client:Dict[uuid.UUID,str] = {}
     # Process messages from both sockets:
     while True:
         socks = dict(server_prop.poller.poll())
@@ -105,10 +105,10 @@ def run_server(server_prop:ServerProp, text_file:str):
             # Receive the registration request:
             print(f"Received registration request: \"{reg_req}\".")
             # Generate a token for this client:
-            client_token = uuid.uuid4().hex
+            client_token:str = uuid.uuid4().hex
             client[uuid.UUID(reg_req)] = client_token
             # Set the reply to the registration request:
-            reg_req_rep = client_token
+            reg_req_rep:str = client_token
             print(f" Sending reply to: \"{reg_req}\" >> \"{reg_req_rep}\"")
             server_prop.socket_reg.send_string(reg_req_rep)
         if server_prop.socket_txt in socks:
@@ -118,6 +118,7 @@ def run_server(server_prop:ServerProp, text_file:str):
             print(f"Received request with text: \"{txt_req}\".")
             (client_txt, client_uuid_hex, client_token) = tuple(
                 str(b, 'utf-8') for b in txt_req)  # pylint:disable=inconsistent-quotes
+            txt_req_rep:str = ""
             if (client_uuid := uuid.UUID(client_uuid_hex)) not in client.keys():
                 print(f" ERROR: Unknown client {client_uuid_hex}!")
                 txt_req_rep = "ERR:unknown-client"
