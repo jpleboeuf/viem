@@ -17,6 +17,9 @@ import zmq
 from zmq.utils.win32 import allow_interrupt
 from utils import count_calls
 
+SOCKET_REG_ADDR:str = "tcp://*:8000"
+SOCKET_TXT_ADDR:str = "tcp://*:8001"
+
 # pylint:disable=inconsistent-quotes
 ServerProp = namedtuple('ServerProp',
     ['uuid', 'context', 'socket_reg', 'socket_txt', 'poller'])
@@ -41,27 +44,25 @@ def start_server():
         # Prepare our context and sockets:
         context = zmq.Context()
         # + socket to register the client on the server
-        req_addr:str = "tcp://*:8000"
         print(" Creating a socket",
-            f"listening on {req_addr} for registrations...")
+            f"listening on {SOCKET_REG_ADDR} for registrations...")
         try:
             socket_reg = context.socket(zmq.REP)
-            socket_reg.bind(req_addr)
-            print(f"  Listening for registrations on {req_addr}.")
+            socket_reg.bind(SOCKET_REG_ADDR)
+            print(f"  Listening for registrations on {SOCKET_REG_ADDR}.")
         except zmq.error.ZMQError:
-            print(f"  Error: address {req_addr} already in use!")
+            print(f"  Error: address {SOCKET_REG_ADDR} already in use!")
             print("Exiting.")
             context.term()
             exit(8)
         # + socket to send text to the server
-        txt_addr:str = "tcp://*:8001"
-        print(f" Creating a socket listening on {txt_addr} for texts...")
+        print(f" Creating a socket listening on {SOCKET_TXT_ADDR} for texts...")
         try:
             socket_txt = context.socket(zmq.REP)
-            socket_txt.bind(txt_addr)
-            print(f"  Listening for texts on {txt_addr}.")
+            socket_txt.bind(SOCKET_TXT_ADDR)
+            print(f"  Listening for texts on {SOCKET_TXT_ADDR}.")
         except zmq.error.ZMQError:
-            print(f"  Error: address {txt_addr} already in use!")
+            print(f"  Error: address {SOCKET_TXT_ADDR} already in use!")
             print("Exiting.")
             context.term()
             exit(8)

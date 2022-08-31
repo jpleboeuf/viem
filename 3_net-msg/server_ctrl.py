@@ -13,6 +13,8 @@ import zmq
 from zmq.utils.win32 import allow_interrupt
 from utils import count_calls
 
+SOCKET_REG_ADDR:str = "tcp://localhost:8000"
+
 # pylint:disable=inconsistent-quotes
 ClientProp = namedtuple('ClientProp',
     ['context', 'socket_reg'])
@@ -29,7 +31,7 @@ def start_client():
         # + socket to smanage the server
         print(" Connecting to the server for management...")
         socket_reg = context.socket(zmq.REQ)
-        socket_reg.connect("tcp://localhost:8000")
+        socket_reg.connect(SOCKET_REG_ADDR)
         print("  Connected to the server for management.")
     print("Starting client...")
     start_zmq()

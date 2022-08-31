@@ -18,6 +18,9 @@ from zmq.utils.win32 import allow_interrupt
 from utils import count_calls
 import click
 
+SOCKET_REG_ADDR:str = "tcp://localhost:8000"
+SOCKET_TXT_ADDR:str = "tcp://localhost:8001"
+
 # pylint:disable=inconsistent-quotes
 ClientProp = namedtuple('ClientProp',
     ['uuid', 'context', 'socket_reg', 'socket_txt'])
@@ -40,15 +43,15 @@ def start_client():
         # Prepare our context and sockets:
         context = zmq.Context()
         # + socket to register the client on the server
-        print(" Connecting to the server for registration...")
+        print(f" Connecting to the server on {SOCKET_REG_ADDR} for registration...")
         socket_reg = context.socket(zmq.REQ)
-        socket_reg.connect("tcp://localhost:8000")
-        print("  Connected to the server for registration.")
+        socket_reg.connect(SOCKET_REG_ADDR)
+        print(f"  Connected to the server on {SOCKET_REG_ADDR} for registration.")
         # + socket to send text to the server
-        print(" Connecting to the server for texting...")
+        print(f" Connecting to the server on {SOCKET_TXT_ADDR} for texting...")
         socket_txt = context.socket(zmq.REQ)
-        socket_txt.connect("tcp://localhost:8001")
-        print("  Connected to the server for texting.")
+        socket_txt.connect(SOCKET_TXT_ADDR)
+        print(f"  Connected to the server on {SOCKET_TXT_ADDR} for texting.")
     print("Starting client...")
     uniq_id:uuid.UUID = gen_client_uuid()
     start_zmq()
